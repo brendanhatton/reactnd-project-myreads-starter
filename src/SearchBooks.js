@@ -44,7 +44,7 @@ class SearchBooks extends Component {
                     <ol className="books-grid">
                         {books.map((book) => (
                             <li key={book.id} className='contact-list-item'>
-                                <Book title={book.title} authors={book.authors} />
+                                <Book title={book.title} authors={book.authors} imageUrl={book.imageLinks.thumbnail}/>
                             </li>
                         ))}
                     </ol>
