@@ -6,18 +6,20 @@ class SearchBooks extends Component {
     state = {
         query: '',
     }
+
     updateQuery = (query) => {
         this.setState({ query: query.trim() })
-        console.log(query)
-        this.props.searchBooks(query.trim())
+        if (query.trim() !== '') {
+            this.props.searchBooks(query.trim())
+        }
+        
     }
-    clearQuery = () => {
-        this.setState({ query: '' })
-    }
+
+
 
     render() {
         const { query } = this.state.query
-        const books = this.props.books || []
+        const books = this.props.searchResults || []
         return (
             <div className="search-books">
                 <div className="search-books-bar">
@@ -44,7 +46,13 @@ class SearchBooks extends Component {
                     <ol className="books-grid">
                         {books.map((book) => (
                             <li key={book.id} className='contact-list-item'>
-                                <Book title={book.title} authors={book.authors} imageUrl={book.imageLinks.thumbnail}/>
+                                <Book
+                                    id={book.id}
+                                    moveBookToShelf={this.props.moveBookToShelf}
+                                    title={book.title}
+                                    authors={book.authors}
+                                    shelf={book.shelf}
+                                    imageUrl={book.imageLinks.thumbnail} />
                             </li>
                         ))}
                     </ol>
