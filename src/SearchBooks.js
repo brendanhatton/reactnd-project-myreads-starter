@@ -12,9 +12,23 @@ class SearchBooks extends Component {
         if (query.trim() !== '') {
             this.props.searchBooks(query.trim())
         }
-        
     }
 
+    getShelf = (bookId) => {
+        let book = this.props.booksCurrentlyReading.filter((c) => c.id === bookId)
+        if (book.length > 0) {
+            return book[0].shelf
+        }
+        book = this.props.booksWantToRead.filter((c) => c.id === bookId)
+        if (book.length > 0) {
+            return book[0].shelf
+        }
+        book = this.props.booksRead.filter((c) => c.id === bookId)
+        if (book.length > 0) {
+            return book[0].shelf
+        }
+        return "none"
+    }
 
 
     render() {
@@ -51,7 +65,7 @@ class SearchBooks extends Component {
                                     moveBookToShelf={this.props.moveBookToShelf}
                                     title={book.title}
                                     authors={book.authors}
-                                    shelf={book.shelf}
+                                    shelf={this.getShelf(book.id)}
                                     imageUrl={book.imageLinks.thumbnail} />
                             </li>
                         ))}

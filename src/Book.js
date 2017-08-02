@@ -4,7 +4,6 @@ class Book extends Component {
 
     constructor(props) {
         super(props);
-        // this.state = { value: this.props.shelf };
         this.handleChange = this.handleChange.bind(this);
     }
     state = {
