@@ -11,7 +11,7 @@ class Book extends Component {
     }
 
     handleChange(event) {
-        this.props.moveBookToShelf(this.props.id, event.target.value)
+        this.props.moveBookToShelf(this.props.id, event.target.value, this.props.fromShelf)
         this.setState({ value: event.target.value });
     }
 

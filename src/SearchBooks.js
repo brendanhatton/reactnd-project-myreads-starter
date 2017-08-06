@@ -15,15 +15,15 @@ class SearchBooks extends Component {
     }
 
     getShelf = (bookId) => {
-        let book = this.props.booksCurrentlyReading.filter((c) => c.id === bookId)
+        let book = this.props.currentlyReading.filter((c) => c.id === bookId)
         if (book.length > 0) {
             return book[0].shelf
         }
-        book = this.props.booksWantToRead.filter((c) => c.id === bookId)
+        book = this.props.wantToRead.filter((c) => c.id === bookId)
         if (book.length > 0) {
             return book[0].shelf
         }
-        book = this.props.booksRead.filter((c) => c.id === bookId)
+        book = this.props.read.filter((c) => c.id === bookId)
         if (book.length > 0) {
             return book[0].shelf
         }
@@ -58,17 +58,24 @@ class SearchBooks extends Component {
                 </div>
                 <div className="search-books-results">
                     <ol className="books-grid">
-                        {books.map((book) => (
-                            <li key={book.id} className='contact-list-item'>
-                                <Book
-                                    id={book.id}
-                                    moveBookToShelf={this.props.moveBookToShelf}
-                                    title={book.title}
-                                    authors={book.authors}
-                                    shelf={this.getShelf(book.id)}
-                                    imageUrl={book.imageLinks.thumbnail} />
-                            </li>
-                        ))}
+                        {books.map((book) => {
+                            let key = book.id + '-' + book.title+'-'+book.shelf
+                            let fromShelf = this.getShelf(book.id)
+                            return (
+                                <li key={key} className='contact-list-item'>
+                                    {}
+                                    <Book
+                                        id={book.id}
+                                        moveBookToShelf={this.props.moveBookToShelf}
+                                        fromShelf={fromShelf}
+                                        title={book.title}
+                                        authors={book.authors}
+                                        shelf={fromShelf}
+                                        imageUrl={book.imageLinks.thumbnail} />
+                                </li>
+                            )
+                        }
+                        )}
                     </ol>
                 </div>
             </div>

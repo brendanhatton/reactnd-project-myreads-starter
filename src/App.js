@@ -8,8 +8,8 @@ import ListBooks from './ListBooks'
 class BooksApp extends React.Component {
   state = {
     searchResults: [],
-    booksCurrentlyReading: [],
-    booksWantToRead: [],
+    currentlyReading: [],
+    wantToRead: [],
     booksRead: []
   }
   componentDidMount = () => {
@@ -18,26 +18,43 @@ class BooksApp extends React.Component {
 
   updateBooksFromServer = () => {
     BooksAPI.getAll().then(allBooks => {
-      console.log(allBooks)
       this.setState({
-        booksCurrentlyReading: allBooks.filter((b) => b.shelf === 'currentlyReading'),
-        booksWantToRead: allBooks.filter((b) => b.shelf === 'wantToRead'),
-        booksRead: allBooks.filter((b) => b.shelf === 'read'),
+        currentlyReading: allBooks.filter((b) => b.shelf === 'currentlyReading'),
+        wantToRead: allBooks.filter((b) => b.shelf === 'wantToRead'),
+        read: allBooks.filter((b) => b.shelf === 'read'),
       })
     })
   }
 
   searchBooks = (query) => {
     BooksAPI.search(query).then((searchResults) => {
-      this.setState({ searchResults: searchResults })
+      //respond to code review
+      if (this.state.searchResults != searchResults) {
+        this.setState({ searchResults: Array.from(new Set(searchResults)) })
+      }
     })
   }
 
-  moveBookToShelf = (bookId, shelf) => {
-    console.log('move to shelf' + bookId + ', ' + shelf)
-    BooksAPI.get(bookId)
-      .then(book => BooksAPI.update(book, shelf)
-        .then(this.updateBooksFromServer()))
+  moveBookToShelf = (bookId, toShelf, fromShelf) => {
+    console.log('move to shelf' + bookId + ', ' + toShelf)
+    let newBook
+    if (fromShelf && fromShelf !== 'none') {
+      let fromShelfUpdated = this.state[fromShelf].filter((b) => b.id !== bookId)
+      newBook = Promise.resolve(this.state[fromShelf].filter((b) => b.id === bookId)[0])
+      this.setState({ [fromShelf]: fromShelfUpdated })
+    } else {
+      newBook = BooksAPI.get(bookId)
+    }
+
+    newBook.then((newBook) => {
+      let toShelfUpdated = this.state[toShelf].concat(newBook)
+      this.setState({ [toShelf]: toShelfUpdated })
+
+      BooksAPI.update(newBook, toShelf)
+    })
+
+
+
   }
 
   render() {
@@ -45,20 +62,20 @@ class BooksApp extends React.Component {
       <div className="app">
         <Route exact path="/" render={({ history }) => (
           <ListBooks
-            booksCurrentlyReading={this.state.booksCurrentlyReading}
-            booksWantToRead={this.state.booksWantToRead}
-            booksRead={this.state.booksRead}
+            currentlyReading={this.state.currentlyReading}
+            wantToRead={this.state.wantToRead}
+            read={this.state.read}
             moveBookToShelf={this.moveBookToShelf}
           />
         )} />
 
         <Route path="/search" render={({ history }) => (
-          <SearchBooks searchBooks={this.searchBooks} 
-            searchResults={this.state.searchResults} 
-            booksCurrentlyReading={this.state.booksCurrentlyReading}
-            booksWantToRead={this.state.booksWantToRead}
-            booksRead={this.state.booksRead}
-            moveBookToShelf={this.moveBookToShelf} 
+          <SearchBooks searchBooks={this.searchBooks}
+            searchResults={this.state.searchResults}
+            currentlyReading={this.state.currentlyReading}
+            wantToRead={this.state.wantToRead}
+            read={this.state.read}
+            moveBookToShelf={this.moveBookToShelf}
           />
         )} />
       </div>

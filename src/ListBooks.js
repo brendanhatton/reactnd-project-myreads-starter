@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import Book from './Book'
+import Shelf from './Shelf'
 
 class ListBooks extends Component {
     render() {
@@ -11,60 +11,9 @@ class ListBooks extends Component {
                 </div>
                 <div className="list-books-content">
                     <div>
-                        <div className="bookshelf">
-                            <h2 className="bookshelf-title">Currently Reading</h2>
-                            <div className="bookshelf-books">
-                                <ol className="books-grid">
-                                    {this.props.booksCurrentlyReading.map((book) => (
-                                        <li key={book.id} className='contact-list-item'>
-                                            <Book
-                                                id={book.id}
-                                                moveBookToShelf={this.props.moveBookToShelf}
-                                                title={book.title}
-                                                authors={book.authors}
-                                                shelf={book.shelf}
-                                                imageUrl={book.imageLinks.thumbnail} />
-                                        </li>
-                                    ))}
-                                </ol>
-                            </div>
-                        </div>
-                        <div className="bookshelf">
-                            <h2 className="bookshelf-title">Want to Read</h2>
-                            <div className="bookshelf-books">
-                                <ol className="books-grid">
-                                    {this.props.booksWantToRead.map((book) => (
-                                        <li key={book.id} className='contact-list-item'>
-                                            <Book
-                                                id={book.id}
-                                                moveBookToShelf={this.props.moveBookToShelf}
-                                                title={book.title}
-                                                authors={book.authors}
-                                                shelf={book.shelf}
-                                                imageUrl={book.imageLinks.thumbnail} />
-                                        </li>
-                                    ))}
-                                </ol>
-                            </div>
-                        </div>
-                        <div className="bookshelf">
-                            <h2 className="bookshelf-title">Read</h2>
-                            <div className="bookshelf-books">
-                                <ol className="books-grid">
-                                    {this.props.booksRead.map((book) => (
-                                        <li key={book.id} className='contact-list-item'>
-                                            <Book
-                                                id={book.id}
-                                                moveBookToShelf={this.props.moveBookToShelf}
-                                                title={book.title}
-                                                authors={book.authors}
-                                                shelf={book.shelf}
-                                                imageUrl={book.imageLinks.thumbnail} />
-                                        </li>
-                                    ))}
-                                </ol>
-                            </div>
-                        </div>
+                        <Shelf shelfTitle='Currently Reading' books={this.props.currentlyReading} moveBookToShelf={this.props.moveBookToShelf} fromShelf='currentlyReading' />
+                        <Shelf shelfTitle='Want to Read' books={this.props.wantToRead} moveBookToShelf={this.props.moveBookToShelf} fromShelf='wantToRead' />
+                        <Shelf shelfTitle='Read' books={this.props.read} moveBookToShelf={this.props.moveBookToShelf} fromShelf='read' />
                     </div>
                 </div>
                 <div className="open-search">
